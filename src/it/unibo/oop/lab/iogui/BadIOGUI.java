@@ -6,9 +6,13 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Random;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -37,8 +41,19 @@ public class BadIOGUI {
     public BadIOGUI() {
         final JPanel canvas = new JPanel();
         canvas.setLayout(new BorderLayout());
+        /*
+         * ES 01.01
+         */
+        final JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        canvas.add(panel, BorderLayout.CENTER);
         final JButton write = new JButton("Write on file");
-        canvas.add(write, BorderLayout.CENTER);
+        panel.add(write, BorderLayout.CENTER);
+        /*
+         * ES 01.02
+         */
+        JButton read = new JButton("Read from file");
+        panel.add(read, BorderLayout.CENTER);
         frame.setContentPane(canvas);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         /*
@@ -62,6 +77,20 @@ public class BadIOGUI {
                 }
             }
         });
+        /*
+         * Read handler
+         */
+        read.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(final ActionEvent arg0) {
+                try { 
+                    System.out.println(Files.readAllLines(Path.of(PATH)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } 
+        });
     }
 
     private void display() {
@@ -83,6 +112,10 @@ public class BadIOGUI {
          * on screen. Results may vary, but it is generally the best choice.
          */
         frame.setLocationByPlatform(true);
+        /*
+         * Resizes the frame to the minimum size prior to displaying
+         */
+        frame.pack();
         /*
          * OK, ready to pull the frame onscreen
          */
