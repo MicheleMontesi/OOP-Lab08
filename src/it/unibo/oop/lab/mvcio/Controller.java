@@ -3,9 +3,6 @@ package it.unibo.oop.lab.mvcio;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 /**
  * 
  */
@@ -34,10 +31,9 @@ public class Controller {
     }
      /** 3) A method for getting the path (in form of String) of the current File.
       * 
-      * @param current : current file
       * @return the absolute path
      */ 
-    public String getFilePath(final File current) {
+    public String getFilePath() {
         return this.current.getAbsolutePath();
     }
      /** 4) A method that gets a String as input and saves its content on the current
@@ -63,7 +59,7 @@ public class Controller {
     public void setDestination(final File file) {
         final File parent = file.getParentFile();
         if (parent.exists()) {
-            current = parent;
+            current = file;
         } else {
             throw new IllegalArgumentException("Cannot save in non-existing folder");
         }
