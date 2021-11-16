@@ -1,12 +1,20 @@
 package it.unibo.oop.lab.mvcio;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 /**
  * 
  */
 public class Controller {
 
-    private File current;
+    private static final String HOME = System.getProperty("user.home");
+    private static final String SEPARATOR = System.getProperty("file.separator");
+    private static final String DEFAULT_FILE = "output.txt";
+    private File current = new File(HOME + SEPARATOR + DEFAULT_FILE);
     /**
      * This class must implement a simple controller responsible of I/O access. It
      * considers a single file at a time, and it is able to serialize objects in it.
@@ -17,9 +25,6 @@ public class Controller {
      * 
      * @param current : current file
      */
-    public void setCurrentFile(final File current) {
-        this.current = current;
-    }
      /** 2) A method for getting the current File.
       * 
       * @return the current file
@@ -39,16 +44,37 @@ public class Controller {
      * file. This method may throw an IOException.
      * 
      * @param string : string to write in file
-     * @param current : file to write into
+     * @throws IOException 
      */ 
-    public void writeFile(final String string, final File current) {
+    public void writeFile(final String string) throws IOException {
+        try (PrintStream out = new PrintStream(current)) {
+            out.println(string);
+        }
     }
-     /* 5) By default, the current file is "output.txt" inside the user home folder.
+     /** 5) By default, the current file is "output.txt" inside the user home folder.
      * A String representing the local user home folder can be accessed using
      * System.getProperty("user.home"). The separator symbol (/ on *nix, \ on
      * Windows) can be obtained as String through the method
      * System.getProperty("file.separator"). The combined use of those methods leads
      * to a software that runs correctly on every platform.
+     * 
+     * @param file : file where to write
      */
+    public void setDestination(final File file) {
+        final File parent = file.getParentFile();
+        if (parent.exists()) {
+            current = parent;
+        } else {
+            throw new IllegalArgumentException("Cannot save in non-existing folder");
+        }
+    }
+    /**
+     * setDestination with a string.
+     * 
+     * @param file : string that represent the file
+     */
+    public void setDestination(final String file) {
+        setDestination(new File(file));
+    }
 
 }
