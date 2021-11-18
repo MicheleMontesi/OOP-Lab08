@@ -1,9 +1,20 @@
 package it.unibo.oop.lab.mvc;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.LayoutManager;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 /**
  * A very simple program using a graphical interface.
@@ -36,9 +47,55 @@ public final class SimpleGUI {
 
     /**
      * builds a new {@link SimpleGUI}.
+     * 
+     * @param ctrl
+     *              controller for the GUI.
      */
-    public SimpleGUI() {
-
+    public SimpleGUI(final ControllerImpl ctrl) {
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        final List<String> list = new ArrayList<>();
+        /*
+         * creating frame's element's
+         */
+        final JPanel mainPanel = new JPanel();
+        final JPanel southernPanel = new JPanel();
+        final JTextField upperTextField = new JTextField();
+        final JTextArea centerTextArea = new JTextArea();
+        final JButton printButton = new JButton("Print");
+        printButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                try {
+                    ctrl.setNewString(upperTextField.getText());
+                    if (!"".equals(ctrl.getNextString())) {
+                        list.add(ctrl.getNextString());
+                    }
+                    centerTextArea.setText(ctrl.getNextString());
+                    ctrl.printString();
+                    upperTextField.setText(null);
+                } catch (IllegalStateException e1) {
+                    JOptionPane.showMessageDialog(frame, "You must insert a non null sentence!");
+                }
+            }
+        });
+        final JButton historyButton = new JButton("Show History");
+        historyButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                centerTextArea.setText(list.toString());
+            }
+        });
+        final LayoutManager layout = new BorderLayout();
+        /*
+         * setting up the frame
+         */
+        mainPanel.setLayout(layout);
+        mainPanel.add(southernPanel, BorderLayout.SOUTH);
+        mainPanel.add(upperTextField, BorderLayout.NORTH);
+        mainPanel.add(centerTextArea, BorderLayout.CENTER);
+        southernPanel.add(printButton, BorderLayout.CENTER);
+        southernPanel.add(historyButton, BorderLayout.SOUTH);
+        centerTextArea.setEditable(false);
         /*
          * Make the frame half the resolution of the screen. This very method is
          * enough for a single screen setup. In case of multiple monitors, the
@@ -49,10 +106,11 @@ public final class SimpleGUI {
          * MUCH better than manually specify the size of a window in pixel: it
          * takes into account the current resolution.
          */
+        frame.setContentPane(mainPanel);
         final Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         final int sw = (int) screen.getWidth();
         final int sh = (int) screen.getHeight();
-        frame.setSize(sw / 2, sh / 2);
+        frame.setSize(sw / 4, sh / 4);
 
         /*
          * Instead of appearing at (0,0), upper left corner of the screen, this
@@ -61,5 +119,17 @@ public final class SimpleGUI {
          */
         frame.setLocationByPlatform(true);
     }
-
+    /*
+     * 
+     */
+    public void display() {
+        frame.setVisible(true);
+    }
+    /*
+     * 
+     */
+    public static void main(final String[] args) {
+        final SimpleGUI gui = new SimpleGUI(new ControllerImpl());
+        gui.display();
+    }
 }
