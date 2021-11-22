@@ -108,7 +108,6 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
     public static void main(final String... args) throws FileNotFoundException {
         new DrawNumberApp("config.yml", // res is part of the classpath!
                 new DrawNumberViewImpl(),
-                new DrawNumberViewImpl(),
                 new PrintStreamView(System.out),
                 new PrintStreamView("output.log"));
     }
