@@ -52,7 +52,7 @@ public class BadIOGUI {
         /*
          * ES 01.02
          */
-        JButton read = new JButton("Read from file");
+        final JButton read = new JButton("Read from file");
         panel.add(read, BorderLayout.CENTER);
         frame.setContentPane(canvas);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -86,16 +86,17 @@ public final class SimpleGUIWithFileChooser {
                 fileChooser.setSelectedFile(ctrl.getCurrentFile());
                 final int result = fileChooser.showSaveDialog(frame);
                 switch (result) {
-                case JFileChooser.APPROVE_OPTION:
-                    final File dest = fileChooser.getSelectedFile();
-                    ctrl.setDestination(dest);
-                    filePath.setText(dest.getPath());
-                    break;
-                case JFileChooser.CANCEL_OPTION:
-                    break;
-                default:
-                    JOptionPane.showMessageDialog(frame, result, "Meh!", JOptionPane.ERROR_MESSAGE);
-                }
+                    case JFileChooser.APPROVE_OPTION:
+                        final File dest = fileChooser.getSelectedFile();
+                        ctrl.setDestination(dest);
+                        filePath.setText(dest.getPath());
+                        break;
+                    case JFileChooser.CANCEL_OPTION:
+                        break;
+                    default:
+                        JOptionPane.showMessageDialog(frame, result, "Meh!", JOptionPane.ERROR_MESSAGE);
+                        break;
+                    }
             }
         });
     /* 4) When in the controller a new File is set, also the graphical interface
